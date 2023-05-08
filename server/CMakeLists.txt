@@ -21,6 +21,10 @@ add_compile_definitions(BOOST_BEAST_USE_STD_STRING_VIEW)
 # Server ----------------
 add_executable(server
 	src/main.cpp
+  src/sdk.h
+  src/core/server.h
+  src/core/server.cpp
+  src/handler/handler.h
 )
 
 target_link_libraries(server PRIVATE Threads::Threads CONAN_PKG::boost)
