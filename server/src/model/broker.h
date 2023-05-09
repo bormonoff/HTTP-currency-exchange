@@ -5,7 +5,8 @@ namespace model {
 
 struct BrokerBets {
     double count;
-    std::string currency;
+    double price;
+    bool is_sell;
 };
 
 class Broker {
@@ -18,10 +19,14 @@ public:
     Broker& operator=(const Broker&) = delete;
 
     const std::string& GetToken() const { return token_; }
-    void AddMoney(double count) { balance += count; }
-
+    double GetRoubles() const noexcept { return rub_; }
+    double GetUSD() const noexcept { return usd_; }
+    void AddRUB(double count) { rub_ += count; }
+    void AddUSD(double count) { usd_ += count; }
+    
 private:
-    double balance;
+    double rub_{0.0};
+    double usd_{0.0};
     std::string token_;
     std::map<std::string, BrokerBets> current_bets_;
 };
