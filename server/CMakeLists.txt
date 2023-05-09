@@ -18,15 +18,34 @@ set(CMAKE_BUILD_TYPE Debug)
 
 add_compile_definitions(BOOST_BEAST_USE_STD_STRING_VIEW)
 
-# Server ----------------
-add_executable(server
-	src/main.cpp
-  src/sdk.h
-  src/core/server.h
-  src/core/server.cpp
-  src/handler/handler.h
+# Model lib -------------
+add_library(model_lib STATIC 
+	src/model/exchange.h
+  src/model/exchange.cpp
+  src/model/broker.h
+  src/model/broker.cpp
+  src/util/util.h
+  src/util/util.cpp
 )
 
-target_link_libraries(server PRIVATE Threads::Threads CONAN_PKG::boost)
+target_include_directories(model_lib PUBLIC src)
+# Server ----------------
+add_executable(server
+	  src/main.cpp
+    src/core/server.h
+    src/core/server.cpp
+    src/handler/handler.h
+)
+
+target_link_libraries(server PRIVATE Threads::Threads CONAN_PKG::boost model_lib)
 target_include_directories(server PRIVATE CONAN_PKG::boost src)
+# -----------------------
+
+# Server tests ----------
+add_executable(model_test
+    tests/model_tests.cpp
+)
+
+target_link_libraries(model_test PRIVATE CONAN_PKG::catch2 model_lib)
+target_include_directories(model_test PRIVATE src)
 # -----------------------
