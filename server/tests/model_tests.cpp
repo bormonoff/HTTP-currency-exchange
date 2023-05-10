@@ -73,6 +73,24 @@ SCENARIO("exchange") {
         auto& broker1 = ex.AddBroker();
         auto& broker2 = ex.AddBroker();
         auto& broker3 = ex.AddBroker();
+
+        WHEN("borkers add bets") {
+            THEN("brokers firtsly buy old bets") {
+                ex.AddBuyBet(broker2, 50, 50);
+                ex.AddBuyBet(broker1, 50, 50);
+                ex.AddSellBet(broker3, 50, 50);
+
+                CHECK(broker2.GetUSD() == 50);
+                CHECK(broker1.GetUSD() == 0);
+            }
+        }
+    }
+
+    GIVEN("the exchange class with brokers") {
+        model::USDExchange ex;
+        auto& broker1 = ex.AddBroker();
+        auto& broker2 = ex.AddBroker();
+        auto& broker3 = ex.AddBroker();
         auto& broker4 = ex.AddBroker();
         auto& broker5 = ex.AddBroker();
         auto& broker6 = ex.AddBroker();
@@ -100,6 +118,30 @@ SCENARIO("exchange") {
                 AND_THEN("exchange class has correct balance of buy bets") {
                     CHECK((*ex.GetBuyOffers().begin()).price == 35);
                     CHECK((*ex.GetBuyOffers().begin()).count == 5);
+                }
+            }
+        }
+    }
+
+    GIVEN("the exchange class with brokers") {
+        model::USDExchange ex;
+        auto& broker1 = ex.AddBroker();
+        auto& broker2 = ex.AddBroker();
+        auto& broker3 = ex.AddBroker();
+
+        WHEN("borkers add different bets") {
+            THEN("brokers bets update correctly") {
+                ex.AddSellBet(broker1, 48, 20);
+                ex.AddSellBet(broker2, 49, 20);
+                CHECK((broker1.GetBrokerBets().find((*ex.GetSellOffers().begin()).bet_token) != broker1.GetBrokerBets().end()));
+                CHECK((broker2.GetBrokerBets().find((*std::next(ex.GetSellOffers().begin())).bet_token) != broker2.GetBrokerBets().end()));
+            }
+            AND_WHEN("brokers buy their bets") {
+                THEN("bets remove sucessfully") {
+                    ex.AddSellBet(broker3, 49, 20);
+                    ex.AddSellBet(broker3, 49, 10);
+
+
                 }
             }
         }

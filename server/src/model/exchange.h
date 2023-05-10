@@ -20,7 +20,7 @@ public:
     Exchange& operator=(const Exchange&) = delete;
 
     Broker& AddBroker() {
-        std::string new_token = util::GenerateToken();
+        std::string new_token = util::GenerateToken(32);
         return (*brokers_.try_emplace(new_token, new_token).first).second;
     }
 
@@ -63,12 +63,19 @@ public:
             auto it = buy_offers_.begin();
             for (; it != buy_offers_.end(); ++it) {
                 if (it -> price <= price) {
-                    buy_offers_.insert(it, {price, count, broker, util::GenerateToken()});
+                    if (it -> price == price) {
+                        ++it;
+                    }
+                    buy_offers_.insert(it, std::move(NotifyBrokerViaNewBet(price, count, broker, false)));
                     return;
                 }
             }
-            if (it == buy_offers_.end()) { buy_offers_.push_back({price, count, broker, util::GenerateToken()}); }
-            if (buy_offers_.empty()) { buy_offers_.push_front({price, count, broker, util::GenerateToken()}); };
+            if (it == buy_offers_.end()) { 
+                buy_offers_.push_back(std::move(NotifyBrokerViaNewBet(price, count, broker, false))); 
+            }
+            if (buy_offers_.empty()) { 
+                buy_offers_.push_front(std::move(NotifyBrokerViaNewBet(price, count, broker, false))); 
+            };
         }
     }
 
@@ -107,12 +114,16 @@ public:
                     } else {
                         ++it;
                     }
-                    sell_offers_.insert(it, {price, count, broker, util::GenerateToken()});
+                    sell_offers_.insert(it, std::move(NotifyBrokerViaNewBet(price, count, broker, true)));
                     return;
                 }
             }
-            if (it == sell_offers_.end()) { sell_offers_.push_back({price, count, broker, util::GenerateToken()}); }
-            if (sell_offers_.empty()) { sell_offers_.push_front({price, count, broker, util::GenerateToken()}); };
+            if (it == sell_offers_.end()) { 
+                sell_offers_.push_back(std::move(NotifyBrokerViaNewBet(price, count, broker, true))); 
+            }
+            if (sell_offers_.empty()) { 
+                sell_offers_.push_front(std::move(NotifyBrokerViaNewBet(price, count, broker, true)));
+            };
         }
     }
 
@@ -127,6 +138,12 @@ private:
         }
     }
 
+    Bet NotifyBrokerViaNewBet(double price, double count, Broker& broker, bool is_sell) {
+        std::string bet_token{util::GenerateToken(16)};
+        broker.AddCurrentBet(bet_token, count, price, is_sell);
+        return {price, count, broker, std::move(bet_token)};
+    }
+    
     std::list<Bet> buy_offers_;
     std::list<Bet> sell_offers_;
 };
