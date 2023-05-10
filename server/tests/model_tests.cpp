@@ -9,7 +9,9 @@ SCENARIO("exchange") {
         auto& broker2 = ex.AddBroker();
         auto& broker3 = ex.AddBroker();
         auto& broker4 = ex.AddBroker();
-
+        auto& broker5 = ex.AddBroker();
+        auto& broker6 = ex.AddBroker();
+        
         WHEN("borkers add sell bets") {
             THEN("bets add correctly") {
                 ex.AddSellBet(broker1, 50, 50);
@@ -24,15 +26,6 @@ SCENARIO("exchange") {
                 }
             }
         }
-    }
-
-    GIVEN("the exchange class with brokers") {
-        model::USDExchange ex;
-        auto& broker1 = ex.AddBroker();
-        auto& broker2 = ex.AddBroker();
-        auto& broker3 = ex.AddBroker();
-        auto& broker4 = ex.AddBroker();
-
 
         WHEN("borkers add buy bets") {
             THEN("bets add correctly") {
@@ -48,13 +41,6 @@ SCENARIO("exchange") {
                 }
             }
         }
-    }
-
-    GIVEN("the exchange class with brokers") {
-        model::USDExchange ex;
-        auto& broker1 = ex.AddBroker();
-        auto& broker2 = ex.AddBroker();
-        auto& broker3 = ex.AddBroker();
 
         WHEN("borkers add bets") {
             THEN("brokers firtsly sell old bets") {
@@ -66,13 +52,6 @@ SCENARIO("exchange") {
                 CHECK(broker1.GetUSD() == 0);
             }
         }
-    }
-
-    GIVEN("the exchange class with brokers") {
-        model::USDExchange ex;
-        auto& broker1 = ex.AddBroker();
-        auto& broker2 = ex.AddBroker();
-        auto& broker3 = ex.AddBroker();
 
         WHEN("borkers add bets") {
             THEN("brokers firtsly buy old bets") {
@@ -84,16 +63,6 @@ SCENARIO("exchange") {
                 CHECK(broker1.GetUSD() == 0);
             }
         }
-    }
-
-    GIVEN("the exchange class with brokers") {
-        model::USDExchange ex;
-        auto& broker1 = ex.AddBroker();
-        auto& broker2 = ex.AddBroker();
-        auto& broker3 = ex.AddBroker();
-        auto& broker4 = ex.AddBroker();
-        auto& broker5 = ex.AddBroker();
-        auto& broker6 = ex.AddBroker();
 
         WHEN("borkers add different bets") {
             THEN("bets match correctly") {
@@ -121,27 +90,55 @@ SCENARIO("exchange") {
                 }
             }
         }
-    }
 
-    GIVEN("the exchange class with brokers") {
-        model::USDExchange ex;
-        auto& broker1 = ex.AddBroker();
-        auto& broker2 = ex.AddBroker();
-        auto& broker3 = ex.AddBroker();
-
-        WHEN("borkers add different bets") {
-            THEN("brokers bets update correctly") {
+        WHEN("borkers add sell orders") {
+            THEN("brokers orders update correctly") {
                 ex.AddSellBet(broker1, 48, 20);
                 ex.AddSellBet(broker2, 49, 20);
                 CHECK((broker1.GetBrokerBets().find((*ex.GetSellOffers().begin()).bet_token) != broker1.GetBrokerBets().end()));
                 CHECK((broker2.GetBrokerBets().find((*std::next(ex.GetSellOffers().begin())).bet_token) != broker2.GetBrokerBets().end()));
+                
+                AND_WHEN("brokers buy USD") {
+                    THEN("bets remove sucessfully") {
+                        ex.AddBuyBet(broker3, 49, 20);
+                        ex.AddBuyBet(broker3, 49, 10);
+                        ex.AddBuyBet(broker3, 49, 5);
+                        CHECK(broker1.GetBrokerBets().empty());
+                        CHECK(broker2.GetBrokerBets().size() == 1);
+                        CHECK(broker2.GetCompleteBrokerBets().size() == 2);
+                        CHECK(broker3.GetBrokerBets().size() == 0);
+                        CHECK(broker3.GetCompleteBrokerBets().size() == 3);
+                        
+                        AND_THEN("Broker after several bets has valid bets") {
+                            CHECK((*broker2.GetBrokerBets().begin()).second.count == 5);
+                        }
+                    }
+                }
             }
-            AND_WHEN("brokers buy their bets") {
-                THEN("bets remove sucessfully") {
-                    ex.AddSellBet(broker3, 49, 20);
-                    ex.AddSellBet(broker3, 49, 10);
+        }
 
-
+        WHEN("borkers add buy orders") {
+            THEN("brokers orders update correctly") {
+                ex.AddBuyBet(broker1, 49, 20);
+                ex.AddBuyBet(broker2, 48, 20);
+                CHECK((broker1.GetBrokerBets().find((*ex.GetBuyOffers().begin()).bet_token) != broker1.GetBrokerBets().end()));
+                CHECK((broker2.GetBrokerBets().find((*std::next(ex.GetBuyOffers().begin())).bet_token) != broker2.GetBrokerBets().end()));
+                
+                AND_WHEN("brokers sell USD") {
+                    THEN("bets remove sucessfully") {
+                        ex.AddSellBet(broker3, 48, 20);
+                        ex.AddSellBet(broker3, 48, 10);
+                        ex.AddSellBet(broker3, 48, 5);
+                        CHECK(broker1.GetBrokerBets().empty());
+                        CHECK(broker2.GetBrokerBets().size() == 1);
+                        CHECK(broker2.GetCompleteBrokerBets().size() == 2);
+                        CHECK(broker3.GetBrokerBets().size() == 0);
+                        CHECK(broker3.GetCompleteBrokerBets().size() == 3);
+                        
+                        AND_THEN("Broker after several bets has valid bets") {
+                            CHECK((*broker2.GetBrokerBets().begin()).second.count == 5);
+                        }
+                    }
                 }
             }
         }

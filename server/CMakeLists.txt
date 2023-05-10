@@ -23,6 +23,7 @@ add_library(model_lib STATIC
 	src/model/exchange.h
   src/model/exchange.cpp
   src/model/broker.h
+  src/model/broker.cpp
   src/util/util.h
   src/util/util.cpp
 )
