@@ -12,8 +12,8 @@ struct BrokerBet {
 
 class Broker {
 public:
-    using std::map<std::string, BrokerBet> Orders;
-    using std::deque<BrokerBet> CompleteOrders;
+    using Orders = std::map<std::string, BrokerBet>;
+    using CompleteOrders =  std::deque<BrokerBet>;
 
     Broker(std::string token) 
         : token_{std::move(token)} {

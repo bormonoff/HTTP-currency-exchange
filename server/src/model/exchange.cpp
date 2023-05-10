@@ -2,7 +2,7 @@
 
 namespace model {
 
-void USDExchange::AddBuyBet(Broker& broker, double price, double count) {
+bool USDExchange::AddBuyBet(Broker& broker, double price, double count) {
     for (auto it = sell_offers_.begin(); it != sell_offers_.end();) {
         if (it -> price > price || count == 0) { break; }
         if (it -> count > count) {
@@ -38,21 +38,24 @@ void USDExchange::AddBuyBet(Broker& broker, double price, double count) {
                                                                        count, 
                                                                        broker, 
                                                                        false)));
-                return;
+                return true;
             }
         }
         if (it == buy_offers_.end()) { 
             buy_offers_.push_back(std::move(NotifyBrokerViaNewBet(price, count, 
                                                                   broker, false))); 
+            return true;
         }
         if (buy_offers_.empty()) { 
             buy_offers_.push_front(std::move(NotifyBrokerViaNewBet(price, count, 
                                                                    broker, false))); 
+            return true;
         };
+        return false;
     }
 }
 
-void USDExchange::AddSellBet(Broker& broker, double price, double count) {
+bool USDExchange::AddSellBet(Broker& broker, double price, double count) {
     for (auto it = buy_offers_.begin(); it != buy_offers_.end();) {
         if (it -> price < price || count == 0) { break; }
         if (it -> count > count) {  
@@ -91,7 +94,7 @@ void USDExchange::AddSellBet(Broker& broker, double price, double count) {
                                                                         count, 
                                                                         broker, 
                                                                         true)));
-                return;
+                return true;
             }
         }
         if (it == sell_offers_.end()) { 
@@ -99,13 +102,16 @@ void USDExchange::AddSellBet(Broker& broker, double price, double count) {
                                                                    count, 
                                                                    broker, 
                                                                    true))); 
+            return true;
         }
         if (sell_offers_.empty()) { 
             sell_offers_.push_front(std::move(NotifyBrokerViaNewBet(price, 
                                                                     count, 
                                                                     broker, 
                                                                     true)));
-        };
+            return true;
+        }
+        return false;
     }
 }
 

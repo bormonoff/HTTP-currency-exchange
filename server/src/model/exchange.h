@@ -24,19 +24,23 @@ public:
         return (*brokers_.try_emplace(new_token, new_token).first).second;
     }
 
+    Broker& FindBroker(std::string& token) {
+        return brokers_.find(token) -> second;
+    }
+
 private:
     std::map<std::string, Broker> brokers_;
 };
 
 class USDExchange : public Exchange {
 public:
-    using std::list<Bet> Offers;
-
+    using Offers = std::list<Bet>;
+    
     const Offers GetBuyOffers() const noexcept { return buy_offers_; }
     const Offers GetSellOffers() const noexcept { return sell_offers_; }
     
-    void AddBuyBet(Broker& broker, double price, double count);
-    void AddSellBet(Broker& broker, double price, double count);
+    bool AddBuyBet(Broker& broker, double price, double count);
+    bool AddSellBet(Broker& broker, double price, double count);
 
 private:
     template<typename Container>

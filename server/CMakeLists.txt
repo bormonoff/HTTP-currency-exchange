@@ -14,9 +14,9 @@ endif()
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
-set(CMAKE_BUILD_TYPE Debug)
-
 add_compile_definitions(BOOST_BEAST_USE_STD_STRING_VIEW)
+
+set(CMAKE_BUILD_TYPE Debug)
 
 # Model lib -------------
 add_library(model_lib STATIC 
@@ -37,6 +37,8 @@ add_executable(server
     src/core/server.h
     src/core/server.cpp
     src/handler/handler.h
+    src/handler/scenarios.h
+    src/handler/scenarios.cpp
 )
 
 target_link_libraries(server PRIVATE Threads::Threads CONAN_PKG::boost model_lib)

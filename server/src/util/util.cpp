@@ -11,10 +11,10 @@ size_t GetRandomNumber(const int min, const int max) {
     return distribution(generator);
 }
 
-std::string GenerateToken(size_t lengh) {
+std::string GenerateToken(size_t length) {
     std::string result;
-    result.reserve(lengh);
-    for (int i = 0; i < lengh; ++i){
+    result.reserve(length);
+    for (int i = 0; i < length; ++i){
         size_t element = util::GetRandomNumber(1, 15);
         if (element > 9) { 
             if(element == 10){ result += 'a'; continue;}
