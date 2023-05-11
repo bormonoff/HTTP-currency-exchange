@@ -18,6 +18,7 @@ bool Menu::ParseCommand(std::istream& input) {
                 output_ << "Command '"sv << cmd << "' has not been found."sv << std::endl;
             }
         } else {
+            if (cmd == "") { return true; }
             output_ << "Invalid command"sv << std::endl;   
         }
     } catch (const std::exception& e) {
@@ -28,7 +29,7 @@ bool Menu::ParseCommand(std::istream& input) {
 
 void Menu::AddAction(std::string action_name, std::string description, Handler handler) {
     if (!actions_.try_emplace(std::move(action_name), std::move(handler), std::move(description)).second) {
-        throw std::invalid_argument("A command has been added already");
+        std::cout << "A command has been added already"s << std::endl;
     }
 }
 

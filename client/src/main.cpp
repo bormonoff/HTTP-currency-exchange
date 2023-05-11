@@ -15,6 +15,7 @@ void Start() {
         return false;
     });
     network::Network network;
+    scenario::Scenario scenario{menu, network, std::cin, std::cout};
     menu.Run();
 }
 }  // namespace 

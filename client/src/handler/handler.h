@@ -15,13 +15,12 @@ namespace network {
 namespace net = boost::asio;
 namespace beast = boost::beast;
 namespace http = beast::http;
-namespace json = boost::json;
 
 using tcp = net::ip::tcp;
-using namespace std::literals;
 using Request = http::request<http::string_body>;
 using Response = http::response<http::string_body>; 
-    
+
+using namespace std::literals;
 
 const std::string SERVER_IP = "127.0.0.1"s;
 const size_t SERVER_PORT = 8080;
@@ -55,8 +54,7 @@ private:
     template<typename Handler>
     void ViewResponse(Response&& res, Handler&& handler) {
         try {
-            json::value parse_response = json::parse(res.body());
-            handler(parse_response);
+            handler(std::move(res));
         } catch(std::exception& ex) {
             std::cout << "Server response is corruped" << std::endl;
             return;
@@ -67,6 +65,7 @@ private:
 
     net::io_context ioc_; 
     tcp::socket socket_;
+    std::string token_;
 };
 
 }  // namespace network
