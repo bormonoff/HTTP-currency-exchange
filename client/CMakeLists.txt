@@ -21,6 +21,11 @@ add_compile_definitions(BOOST_BEAST_USE_STD_STRING_VIEW)
 # Client ----------------
 add_executable(client
     src/main.cpp
+    src/menu/menu.h
+    src/menu/menu.cpp
+    src/handler/handler.h
+    src/handler/handler.cpp
+    src/model/broker.h
 )
 
 target_link_libraries(client PRIVATE Threads::Threads CONAN_PKG::boost)
