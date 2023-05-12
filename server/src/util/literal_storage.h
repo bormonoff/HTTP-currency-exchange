@@ -7,7 +7,7 @@ const std::string CONTENT_TYPE_JSON = "application/json"s;
 const std::string NO_CACHE = "no-cache"s;
 
 const std::string CODE = "Code"s;
-const std::string MESSAGE = "Bet has been already created"s;
+const std::string MESSAGE = "Message"s;
 const std::string INVALID_BET_CODE = "invalidBet"s;
 const std::string BET_HAS_ALREADY_CREATED = "Bet has been already created"s;
 }  // namespace handler

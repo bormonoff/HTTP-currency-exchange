@@ -31,6 +31,7 @@ std::optional<Request> FormCreateOrderReq(const model::Broker& broker) {
     } else {
         std::cout  << "How many usd do you want to sell? (example: 30.3829)"s << std::endl;
         std::cin >> str_count;
+        std::cout.flush();
         if (!util::IsDouble(str_count)) {
             std::cout  << "You try to sell not valid count. Return."s << std::endl;
             return std::nullopt;
@@ -40,8 +41,9 @@ std::optional<Request> FormCreateOrderReq(const model::Broker& broker) {
     std::cout << "Enter a price for one USD: "s << std::endl;
     std::string str_price;
     std::cin  >> str_price;
+    std::cout.flush();
     if (!util::IsDouble(str_price)) {
-         std::cout  << "You try to write not valid price. Return."s << std::endl; 
+        std::cout  << "You try to write not valid price. Return."s << std::endl; 
         return std::nullopt;    
     }
     
