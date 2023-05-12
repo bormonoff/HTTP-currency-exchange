@@ -25,13 +25,14 @@ add_executable(client
     src/menu/menu.cpp
     src/handler/handler.h
     src/handler/handler.cpp
-    src/scenarious/scenario.h
-    src/scenarious/scenario.cpp
-    src/scenarious/request_former.h
-    src/scenarious/request_former.cpp
+    src/scenarios/scenario.h
+    src/scenarios/scenario.cpp
+    src/scenarios/request_former.h
+    src/scenarios/request_former.cpp
     src/model/broker.h
     src/util/util.h
     src/util/util.cpp
+    src/util/literal_storage.h
 )
 
 target_link_libraries(client PRIVATE Threads::Threads CONAN_PKG::boost)

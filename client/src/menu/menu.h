@@ -1,8 +1,8 @@
 #pragma once
 
 #include <iostream>
-#include <map>
 #include <functional>
+#include <map>
 #include <sstream>
 
 namespace menu {

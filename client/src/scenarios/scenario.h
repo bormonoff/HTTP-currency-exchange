@@ -1,12 +1,10 @@
 #pragma once
 
-#include "menu/menu.h"
 #include "handler/handler.h"
-#include "scenarious/request_former.h"
+#include "menu/menu.h"
+#include "scenarios/request_former.h"
 
 namespace scenario {
-
-namespace ph = std::placeholders;
 
 class Scenario {
 public:
@@ -26,11 +24,11 @@ private:
     void InitActios() {
         menu_.AddAction("NewOrder"s, "Create new order"s, 
                 std::bind(&Scenario::CreateOrder, this));
-        menu_.AddAction("GetBalance"s, "Get broker balance"s, 
+        menu_.AddAction("GetBalance"s, "Get balance"s, 
                 std::bind(&Scenario::GetBalance, this));
         menu_.AddAction("GetCurrentOrders"s, "Get all current orders"s, 
                 std::bind(&Scenario::GetOrders, this));
-        menu_.AddAction("GetCompleteOrders"s, "Get all completed orders"s, 
+        menu_.AddAction("GetCompletedOrders"s, "Get all completed orders"s, 
                 std::bind(&Scenario::GetCompleteOrders, this));
     }
 

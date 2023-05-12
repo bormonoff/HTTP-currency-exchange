@@ -1,7 +1,7 @@
 #pragma once
 
-#include <optional>
 #include <iostream>
+#include <optional>
 
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/beast/core.hpp>

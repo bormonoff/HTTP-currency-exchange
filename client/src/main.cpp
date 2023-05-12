@@ -1,5 +1,5 @@
 #include "menu/menu.h"
-#include "scenarious/scenario.h"
+#include "scenarios/scenario.h"
 #include "handler/handler.h"
 
 namespace {

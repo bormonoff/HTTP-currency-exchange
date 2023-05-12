@@ -4,9 +4,9 @@
 
 namespace menu {
     
-bool Menu::ParseCommand(std::istream& input) {
-    using namespace std::literals;
+using namespace std::literals;
 
+bool Menu::ParseCommand(std::istream& input) {
     try {
         std::string cmd;
         if (input >> cmd) {
@@ -15,11 +15,11 @@ bool Menu::ParseCommand(std::istream& input) {
                     return false;
                 }
             } else {
-                output_ << "Command '"sv << cmd << "' has not been found."sv << std::endl;
+                output_ << "Command '"s << cmd << "' has not been found."s << std::endl;
             }
         } else {
             if (cmd == "") { return true; }
-            output_ << "Invalid command"sv << std::endl;   
+            output_ << "Invalid command"s << std::endl;   
         }
     } catch (const std::exception& e) {
         output_ << e.what() << std::endl;
@@ -27,8 +27,10 @@ bool Menu::ParseCommand(std::istream& input) {
     return true;
 }
 
-void Menu::AddAction(std::string action_name, std::string description, Handler handler) {
-    if (!actions_.try_emplace(std::move(action_name), std::move(handler), std::move(description)).second) {
+void Menu::AddAction(std::string action_name, std::string description, 
+                     Handler handler) {
+    if (!actions_.try_emplace(std::move(action_name), std::move(handler), 
+                              std::move(description)).second) {
         std::cout << "A command has been added already"s << std::endl;
     }
 }

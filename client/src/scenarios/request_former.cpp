@@ -1,10 +1,9 @@
-#include "scenarious/request_former.h"
+#include "scenarios/request_former.h"
 
 #include <iostream>
 
 #include "util/util.h"
-
-#include <boost/algorithm/string/trim.hpp>
+#include "util/literal_storage.h"
 
 namespace scenario {
 
@@ -42,14 +41,14 @@ std::optional<Request> FormCreateOrderReq(const model::Broker& broker) {
     std::string str_price;
     std::cin  >> str_price;
     if (!util::IsDouble(str_price)) {
-         std::cout  << "You try to sell not valid count. Return."s << std::endl; 
+         std::cout  << "You try to write not valid price. Return."s << std::endl; 
         return std::nullopt;    
     }
     
     json::object body;
-    body["is_sell"s] = is_sell;
-    body["count"s] = std::atof(str_count.c_str());
-    body["price"s] = std::atof(str_price.c_str());
+    body[literals::IS_SELL] = is_sell;
+    body[literals::COUNT] = std::atof(str_count.c_str());
+    body[literals::PRICE] = std::atof(str_price.c_str());
 
     std::string a = json::serialize(body);
     request.body() = json::serialize(body);
