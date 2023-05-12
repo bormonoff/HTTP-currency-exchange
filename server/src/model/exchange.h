@@ -19,14 +19,8 @@ public:
     Exchange(const Exchange&) = delete;
     Exchange& operator=(const Exchange&) = delete;
 
-    Broker& AddBroker() {
-        std::string new_token = util::GenerateToken(32);
-        return (*brokers_.try_emplace(new_token, new_token).first).second;
-    }
-
-    Broker& FindBroker(std::string& token) {
-        return brokers_.find(token) -> second;
-    }
+    Broker& AddBroker();
+    Broker& FindBroker(std::string& token);
 
 private:
     std::map<std::string, Broker> brokers_;
@@ -39,14 +33,15 @@ public:
     const Offers GetBuyOffers() const noexcept { return buy_offers_; }
     const Offers GetSellOffers() const noexcept { return sell_offers_; }
     
-    bool AddBuyBet(Broker& broker, double price, double count);
-    bool AddSellBet(Broker& broker, double price, double count);
+    void AddBuyBet(Broker& broker, double price, double count);
+    void AddSellBet(Broker& broker, double price, double count);
 
 private:
     template<typename Container>
     void RemoveBet(const std::string& token, Container& container) {
         for (auto it = container.begin(); it != container.end(); ++it) {
             if (it -> broker.GetToken() ==  token) {
+                it -> broker.RemoveCurrentBet(it -> bet_token);
                 it = container.erase(it);
                 return;
             }

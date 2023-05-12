@@ -26,6 +26,7 @@ add_library(model_lib STATIC
   src/model/broker.cpp
   src/util/util.h
   src/util/util.cpp
+  src/util/literal_storage.h
 )
 
 target_include_directories(model_lib PUBLIC src)
@@ -39,6 +40,8 @@ add_executable(server
     src/handler/handler.h
     src/handler/scenarios.h
     src/handler/scenarios.cpp
+    src/handler/response_storage.h
+    src/handler/response_storage.cpp
 )
 
 target_link_libraries(server PRIVATE Threads::Threads CONAN_PKG::boost model_lib)

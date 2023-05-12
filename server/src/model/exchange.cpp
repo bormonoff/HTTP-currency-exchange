@@ -2,7 +2,16 @@
 
 namespace model {
 
-bool USDExchange::AddBuyBet(Broker& broker, double price, double count) {
+Broker& Exchange::AddBroker() {
+    std::string new_token = util::GenerateToken(32);
+    return (*brokers_.try_emplace(new_token, new_token).first).second;
+}
+
+Broker& Exchange::FindBroker(std::string& token) {
+    return brokers_.find(token) -> second;
+}
+
+void USDExchange::AddBuyBet(Broker& broker, double price, double count) {
     for (auto it = sell_offers_.begin(); it != sell_offers_.end();) {
         if (it -> price > price || count == 0) { break; }
         if (it -> count > count) {
@@ -34,28 +43,24 @@ bool USDExchange::AddBuyBet(Broker& broker, double price, double count) {
                 if (it -> price == price) {
                     ++it;
                 }
-                buy_offers_.insert(it, std::move(NotifyBrokerViaNewBet(price, 
-                                                                       count, 
-                                                                       broker, 
-                                                                       false)));
-                return true;
+                buy_offers_.insert(it, std::move(NotifyBrokerViaNewBet(price, count, 
+                                                                       broker, false)));
+                return; 
             }
         }
         if (it == buy_offers_.end()) { 
             buy_offers_.push_back(std::move(NotifyBrokerViaNewBet(price, count, 
-                                                                  broker, false))); 
-            return true;
+                                                                  broker, false)));
+            
         }
         if (buy_offers_.empty()) { 
             buy_offers_.push_front(std::move(NotifyBrokerViaNewBet(price, count, 
                                                                    broker, false))); 
-            return true;
         };
-        return false;
     }
 }
 
-bool USDExchange::AddSellBet(Broker& broker, double price, double count) {
+void USDExchange::AddSellBet(Broker& broker, double price, double count) {
     for (auto it = buy_offers_.begin(); it != buy_offers_.end();) {
         if (it -> price < price || count == 0) { break; }
         if (it -> count > count) {  
@@ -90,28 +95,19 @@ bool USDExchange::AddSellBet(Broker& broker, double price, double count) {
                 } else {
                     ++it;
                 }
-                sell_offers_.insert(it, std::move(NotifyBrokerViaNewBet(price, 
-                                                                        count, 
-                                                                        broker, 
-                                                                        true)));
-                return true;
+                sell_offers_.insert(it, std::move(NotifyBrokerViaNewBet(price, count, 
+                                                                        broker, true)));
+                return;
             }
         }
         if (it == sell_offers_.end()) { 
-            sell_offers_.push_back(std::move(NotifyBrokerViaNewBet(price, 
-                                                                   count, 
-                                                                   broker, 
-                                                                   true))); 
-            return true;
+            sell_offers_.push_back(std::move(NotifyBrokerViaNewBet(price, count, 
+                                                                   broker, true))); 
         }
         if (sell_offers_.empty()) { 
-            sell_offers_.push_front(std::move(NotifyBrokerViaNewBet(price, 
-                                                                    count, 
-                                                                    broker, 
-                                                                    true)));
-            return true;
+            sell_offers_.push_front(std::move(NotifyBrokerViaNewBet(price, count, 
+                                                                    broker, true)));
         }
-        return false;
     }
 }
 
@@ -135,5 +131,4 @@ void USDExchange::UpdateBrokerAccount(Broker& broker, double price,
     broker.AddCompletedBet(count, price, is_sell);
     broker.UpdateCurrentBet(token, count, price);
 }
-
 }  // namespace model

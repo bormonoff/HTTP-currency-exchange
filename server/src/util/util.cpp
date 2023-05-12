@@ -28,5 +28,4 @@ std::string GenerateToken(size_t length) {
     }
     return result;
 }
-
 }  // namespace util

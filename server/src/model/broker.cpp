@@ -21,4 +21,14 @@ void Broker::UpdateCurrentBet(const std::string& token, double count, double pri
     }
 }
 
+void Broker::RemoveCurrentBet(std::string& token) {
+    current_bets_.erase(token);
+}
+
+bool Broker::HasCurrentOrder() {
+    if (current_bets_.size() > 0) {
+        return true;
+    }
+    return false;
+}
 }  // namespace model
